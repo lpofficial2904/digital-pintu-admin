@@ -1,14 +1,18 @@
 // const API_URL = 'http://localhost:5000/api';
 const API_URL = 'https://digital-pintu-backend.onrender.com/api';
 
-const request = async (path, options = {}) => {
+const request = async (path, { headers = {}, body, ...options } = {}) => {
+  const requestHeaders = new Headers(headers);
+
+  if (body !== undefined && !requestHeaders.has('Content-Type')) {
+    requestHeaders.set('Content-Type', 'application/json');
+  }
+
   const res = await fetch(`${API_URL}${path}`, {
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers || {}),
-    },
     ...options,
+    credentials: 'include',
+    headers: requestHeaders,
+    ...(body !== undefined ? { body } : {}),
   });
 
   const data = await res.json().catch(() => ({}));
@@ -31,7 +35,7 @@ export const updateReviewStatus = (id, active) => request(`/admin/reviews/${id}/
 export const createService = (payload) => request('/admin/services', { method: 'POST', body: JSON.stringify(payload) });
 export const getServices = () => request('/admin/services');
 export const updateService = (id, payload) => request(`/admin/services/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
-export const updateServiceStatus = (id, isActive) => request(`/admin/services/${id}/status`, { method: 'PATCH', body: JSON.stringify({ isActive }) });
+export const updateServiceStatus = (id, isActive) => request(`/admin/services/${id}`, { method: 'PUT', body: JSON.stringify({ isActive }) });
 export const deleteService = (id) => request(`/admin/services/${id}`, { method: 'DELETE' });
 export const getReviews = () => request('/admin/reviews');
 export const createAdminReview = (payload) => request('/admin/reviews', { method: 'POST', body: JSON.stringify(payload) });

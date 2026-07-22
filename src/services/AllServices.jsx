@@ -44,7 +44,21 @@ export default function AllServices() {
       toast.error(error.message || 'Delete failed');
     }
   };
-  const toggle = async (service) => { try { await updateServiceStatus(service._id, !service.isActive); toast.success('Service status updated'); loadServices(); } catch (error) { toast.error(error.message); } };
+  const toggle = async (service) => {
+    try {
+      const data = await updateServiceStatus(service._id, !service.isActive);
+      const updatedService = data.service;
+
+      setServices((currentServices) =>
+        currentServices.map((currentService) =>
+          currentService._id === updatedService._id ? updatedService : currentService
+        )
+      );
+      toast.success('Service status updated');
+    } catch (error) {
+      toast.error(error.message || 'Unable to update service status');
+    }
+  };
 
   return (
     <div className="space-y-6">
