@@ -1,5 +1,4 @@
-// const API_URL = 'http://localhost:5000/api';
-const API_URL = 'https://digital-pintu-backend.onrender.com/api';
+const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api`;
 
 const request = async (path, { headers = {}, body, ...options } = {}) => {
   const requestHeaders = new Headers(headers);

@@ -9,7 +9,7 @@ export default function EditService() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const { register, control, handleSubmit, reset } = useForm({
+  const { register, control, handleSubmit, reset, setValue } = useForm({
     defaultValues: {
       title: '',
       category: '',
@@ -23,6 +23,15 @@ export default function EditService() {
   });
   const { fields: highlightFields, append: appendHighlight, remove: removeHighlight } = useFieldArray({ control, name: 'highlights' });
   const { fields: techFields, append: appendTech, remove: removeTech } = useFieldArray({ control, name: 'technologies' });
+
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => setValue('image', reader.result);
+    reader.readAsDataURL(file);
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -67,7 +76,7 @@ export default function EditService() {
           <div><label className="mb-2 block text-sm text-slate-300">Title</label><input {...register('title', { required: true })} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
           <div><label className="mb-2 block text-sm text-slate-300">Category</label><input {...register('category')} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
           <div><label className="mb-2 block text-sm text-slate-300">Icon</label><input {...register('icon')} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
-          <div><label className="mb-2 block text-sm text-slate-300">Image URL</label><input {...register('image')} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
+          <div><label className="mb-2 block text-sm text-slate-300">Image</label><input type="file" accept="image/*" onChange={handleImageChange} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
         </div>
 
         <div><label className="mb-2 block text-sm text-slate-300">Description</label><textarea {...register('description', { required: true })} rows="4" className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
@@ -86,12 +95,11 @@ export default function EditService() {
         </div>
 
         <div>
-          <div className="mb-3 flex items-center justify-between"><label className="text-sm text-slate-300">Technologies</label><button type="button" onClick={() => appendTech({ name: '', icon: '' })} className="rounded-xl border border-cyan-400/20 px-3 py-2 text-sm text-cyan-300">Add Technology</button></div>
+          <div className="mb-3 flex items-center justify-between"><label className="text-sm text-slate-300">Technologies</label><button type="button" onClick={() => appendTech({ name: '' })} className="rounded-xl border border-cyan-400/20 px-3 py-2 text-sm text-cyan-300">Add Technology</button></div>
           <div className="space-y-3">
             {techFields.map((field, index) => (
-              <div key={field.id} className="grid gap-3 rounded-2xl border border-white/10 bg-slate-950/50 p-3 md:grid-cols-[1fr_1fr_auto]">
+              <div key={field.id} className="grid gap-3 rounded-2xl border border-white/10 bg-slate-950/50 p-3 md:grid-cols-[1fr_auto]">
                 <input {...register(`technologies.${index}.name`, { required: true })} className="rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2" />
-                <input {...register(`technologies.${index}.icon`, { required: true })} className="rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2" />
                 <button type="button" onClick={() => removeTech(index)} className="rounded-xl border border-white/10 px-3 py-2 text-rose-300">Remove</button>
               </div>
             ))}
