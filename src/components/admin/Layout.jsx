@@ -20,6 +20,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="flex">
+        {open && <button aria-label="Close menu" className="fixed inset-0 z-20 bg-slate-950/70 lg:hidden" onClick={() => setOpen(false)} />}
         <aside className={`fixed inset-y-0 left-0 z-30 w-72 transform border-r border-white/10 bg-slate-900/90 p-6 backdrop-blur-xl transition ${open ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
           <div className="mb-8 flex items-center justify-between">
             <div>
@@ -54,13 +55,13 @@ export default function Layout() {
 
         <div className="flex-1 lg:ml-72">
           <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/80 px-4 py-4 backdrop-blur-xl lg:px-8">
-            <div className="flex items-center justify-between">
+            <div className="flex items-start justify-between gap-3">
               <button className="rounded-xl border border-white/10 p-2 lg:hidden" onClick={() => setOpen(true)}>
                 <Menu size={20} />
               </button>
               <div>
-                <h1 className="text-xl font-semibold">Control Center</h1>
-                <p className="text-sm text-slate-400">Modern dashboard for your business</p>
+                <h1 className="text-lg font-semibold sm:text-xl">Control Center</h1>
+                <p className="hidden text-sm text-slate-400 sm:block">Modern dashboard for your business</p>
               </div>
             </div>
           </header>
