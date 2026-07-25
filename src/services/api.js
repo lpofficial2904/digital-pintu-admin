@@ -193,3 +193,11 @@ export const bulkDeleteReviews = (ids) =>
 
 export const getVisitorTracker = () =>
   request("/tracker/admin");
+
+export const getSiteSettings = () => request("/site-settings/admin");
+
+export const updateSiteSettings = (payload) =>
+  request("/site-settings/admin", {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });

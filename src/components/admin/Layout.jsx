@@ -11,6 +11,7 @@ const links = [
   { to: '/contacts', label: 'Contacts', icon: '✉' },
   { to: '/users', label: 'Users', icon: '👤' },
   { to: '/user-tracker', label: 'User Tracker', icon: '◉' },
+  { to: '/contact-buttons', label: 'Contact Buttons', icon: '☎' },
 ];
 
 export default function Layout() {

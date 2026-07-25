@@ -9,6 +9,7 @@ import UserTracker from './pages/UserTracker';
 import AllServices from './services/AllServices';
 import AddService from './services/AddService';
 import EditService from './services/EditService';
+import ContactButtons from './pages/ContactButtons';
 import { useAuth } from './context/AuthContext';
 
 function ProtectedRoute({ children }) {
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="/contacts" element={<Contacts />} />
         <Route path="/users" element={<Users />} />
         <Route path="/user-tracker" element={<UserTracker />} />
+        <Route path="/contact-buttons" element={<ContactButtons />} />
       </Route>
     </Routes>
   );
