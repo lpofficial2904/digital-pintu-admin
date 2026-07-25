@@ -66,9 +66,9 @@ export default function Users() {
             <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">Users</p>
             <h2 className="text-2xl font-semibold text-white">Manage user access</h2>
           </div>
-          <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-slate-950/70 px-3 py-2">
+          <div className="flex min-w-0 items-center gap-2 rounded-2xl border border-white/10 bg-slate-950/70 px-3 py-2">
             <Search size={16} className="text-slate-400" />
-            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search users" className="bg-transparent outline-none" />
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search users" className="min-w-0 flex-1 bg-transparent outline-none" />
           </div>
           <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-sm"><option value="all">All roles</option>{['admin','manager','editor','user'].map((role) => <option key={role} value={role}>{role}</option>)}</select>
         </div>
@@ -101,7 +101,7 @@ export default function Users() {
       )}
 
       <DeleteModal open={Boolean(deleteTarget)} title="user" onCancel={() => setDeleteTarget(null)} onConfirm={handleDelete} />
-      <ManagementModal open={Boolean(editing)} title="Edit user" onClose={() => setEditing(null)}>{editing && <form onSubmit={saveUser} className="space-y-4"><input name="name" defaultValue={editing.name} className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input name="avatar" defaultValue={editing.avatar || ''} placeholder="Avatar URL" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><div className="grid grid-cols-2 gap-3"><select name="role" defaultValue={editing.role} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['admin','manager','editor','user'].map(role=><option key={role}>{role}</option>)}</select><select name="status" defaultValue={editing.status || (editing.isBlocked ? 'Blocked' : 'Active')} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['Active','Blocked','Suspended'].map(status=><option key={status}>{status}</option>)}</select></div><button className="rounded-xl bg-cyan-400 px-4 py-3 font-semibold text-slate-950">Save user</button></form>}</ManagementModal>
+      <ManagementModal open={Boolean(editing)} title="Edit user" onClose={() => setEditing(null)}>{editing && <form onSubmit={saveUser} className="space-y-4"><input name="name" defaultValue={editing.name} className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input name="avatar" defaultValue={editing.avatar || ''} placeholder="Avatar URL" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><div className="grid gap-3 sm:grid-cols-2"><select name="role" defaultValue={editing.role} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['admin','manager','editor','user'].map(role=><option key={role}>{role}</option>)}</select><select name="status" defaultValue={editing.status || (editing.isBlocked ? 'Blocked' : 'Active')} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['Active','Blocked','Suspended'].map(status=><option key={status}>{status}</option>)}</select></div><button className="rounded-xl bg-cyan-400 px-4 py-3 font-semibold text-slate-950">Save user</button></form>}</ManagementModal>
     </div>
   );
 }

@@ -34,12 +34,12 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">Dashboard</p>
           <h2 className="text-2xl font-semibold text-white">Your command center</h2>
         </div>
-        <div className="rounded-2xl border border-cyan-400/20 bg-cyan-500/10 px-4 py-3 text-sm text-cyan-200">
+        <div className="w-fit rounded-2xl border border-cyan-400/20 bg-cyan-500/10 px-4 py-3 text-sm text-cyan-200">
           <div className="flex items-center gap-2"><Sparkles size={16} /> Live business overview</div>
         </div>
       </div>

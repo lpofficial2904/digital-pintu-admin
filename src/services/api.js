@@ -149,6 +149,12 @@ export const deleteService = (id) =>
     method: "DELETE",
   });
 
+export const getBlogs = () => request("/admin/blogs");
+export const createBlog = (payload) => request("/admin/blogs", { method: "POST", body: JSON.stringify(payload) });
+export const updateBlog = (id, payload) => request(`/admin/blogs/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+export const updateBlogStatus = (id, isActive) => request(`/admin/blogs/${id}/status`, { method: "PATCH", body: JSON.stringify({ isActive }) });
+export const deleteBlog = (id) => request(`/admin/blogs/${id}`, { method: "DELETE" });
+
 // ================= Reviews =================
 
 export const getReviews = () =>
@@ -193,6 +199,11 @@ export const bulkDeleteReviews = (ids) =>
 
 export const getVisitorTracker = () =>
   request("/tracker/admin");
+
+export const deleteTrackedVisitor = (id) =>
+  request(`/admin/tracker/${id}`, {
+    method: "DELETE",
+  });
 
 export const getSiteSettings = () => request("/site-settings/admin");
 

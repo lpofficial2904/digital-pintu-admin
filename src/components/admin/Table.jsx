@@ -1,8 +1,8 @@
 export default function Table({ headers, children }) {
   return (
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-900/70">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-white/10 text-sm">
+    <div className="max-w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 sm:rounded-3xl">
+      <div className="max-w-full overflow-x-auto overscroll-x-contain">
+        <table className="min-w-full whitespace-nowrap divide-y divide-white/10 text-sm">
           <thead className="bg-white/5">
             <tr>
               {headers.map((header) => (

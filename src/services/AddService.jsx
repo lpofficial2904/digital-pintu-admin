@@ -9,8 +9,12 @@ export default function AddService() {
   const { register, control, handleSubmit, setValue } = useForm({
     defaultValues: {
       title: '',
+      slug: '',
       category: '',
       description: '',
+      metaTitle: '',
+      metaKeywords: '',
+      metaDescription: '',
       icon: '',
       image: '',
       highlights: [{ title: '', desc: '' }],
@@ -25,6 +29,16 @@ export default function AddService() {
   const handleImageChange = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select a valid image file');
+      event.target.value = '';
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Image size must be 2 MB or less');
+      event.target.value = '';
+      return;
+    }
 
     const reader = new FileReader();
     reader.onloadend = () => setValue('image', reader.result);
@@ -34,7 +48,7 @@ export default function AddService() {
   const onSubmit = async (data) => {
     setSubmitting(true);
     try {
-      await createService({ ...data, slug: data.title.toLowerCase().replace(/\s+/g, '-') });
+      await createService(data);
       toast.success('Service created');
       navigate('/services');
     } catch (error) {
@@ -56,6 +70,10 @@ export default function AddService() {
             <input {...register('title', { required: true })} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" />
           </div>
           <div>
+            <label className="mb-2 block text-sm text-slate-300">Slug</label>
+            <input {...register('slug')} placeholder="website-development" className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" />
+          </div>
+          <div>
             <label className="mb-2 block text-sm text-slate-300">Category</label>
             <input {...register('category')} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" />
           </div>
@@ -64,14 +82,24 @@ export default function AddService() {
             <input {...register('icon')} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" />
           </div>
           <div>
-            <label className="mb-2 block text-sm text-slate-300">Image</label>
+            <label className="mb-2 block text-sm text-slate-300">Choose image from computer</label>
             <input type="file" accept="image/*" onChange={handleImageChange} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" />
+            <p className="mt-1 text-xs text-slate-500">JPG, PNG, WebP or GIF • Maximum 2 MB</p>
           </div>
         </div>
 
         <div>
           <label className="mb-2 block text-sm text-slate-300">Description</label>
           <textarea {...register('description', { required: true })} rows="4" className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" />
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+          <h3 className="mb-4 font-semibold text-white">SEO Settings</h3>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div><label className="mb-2 block text-sm text-slate-300">Meta Title</label><input {...register('metaTitle')} maxLength="70" className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
+            <div><label className="mb-2 block text-sm text-slate-300">Meta Keywords</label><input {...register('metaKeywords')} placeholder="web development, app development" className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
+          </div>
+          <div className="mt-4"><label className="mb-2 block text-sm text-slate-300">Meta Description</label><textarea {...register('metaDescription')} maxLength="180" rows="3" className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
         </div>
 
         <div>
@@ -93,12 +121,13 @@ export default function AddService() {
         <div>
           <div className="mb-3 flex items-center justify-between">
             <label className="text-sm text-slate-300">Technologies</label>
-            <button type="button" onClick={() => appendTech({ name: '' })} className="rounded-xl border border-cyan-400/20 px-3 py-2 text-sm text-cyan-300">Add Technology</button>
+            <button type="button" onClick={() => appendTech({ name: '', icon: '' })} className="rounded-xl border border-cyan-400/20 px-3 py-2 text-sm text-cyan-300">Add Technology</button>
           </div>
           <div className="space-y-3">
             {techFields.map((field, index) => (
-              <div key={field.id} className="grid gap-3 rounded-2xl border border-white/10 bg-slate-950/50 p-3 md:grid-cols-[1fr_auto]">
+              <div key={field.id} className="grid gap-3 rounded-2xl border border-white/10 bg-slate-950/50 p-3 md:grid-cols-[1fr_1fr_auto]">
                 <input {...register(`technologies.${index}.name`, { required: true })} placeholder="Name" className="rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2" />
+                <input {...register(`technologies.${index}.icon`)} placeholder="Icon name, e.g. FaReact" className="rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2" />
                 <button type="button" onClick={() => removeTech(index)} className="rounded-xl border border-white/10 px-3 py-2 text-rose-300">Remove</button>
               </div>
             ))}

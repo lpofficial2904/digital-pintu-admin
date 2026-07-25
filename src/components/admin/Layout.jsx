@@ -5,6 +5,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const links = [
+  { to: '/blogs', label: 'Blogs', icon: 'B' },
   { to: '/dashboard', label: 'Dashboard', icon: '◉' },
   { to: '/services', label: 'Services', icon: '▣' },
   { to: '/reviews', label: 'Reviews', icon: '✦' },
@@ -22,7 +23,7 @@ export default function Layout() {
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="flex">
         {open && <button aria-label="Close menu" className="fixed inset-0 z-20 bg-slate-950/70 lg:hidden" onClick={() => setOpen(false)} />}
-        <aside className={`fixed inset-y-0 left-0 z-30 w-72 transform border-r border-white/10 bg-slate-900/90 p-6 backdrop-blur-xl transition ${open ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+        <aside className={`fixed inset-y-0 left-0 z-30 w-72 max-w-[86vw] transform overflow-y-auto border-r border-white/10 bg-slate-900/95 p-5 backdrop-blur-xl transition sm:p-6 ${open ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
           <div className="mb-8 flex items-center justify-between">
             <div>
               <p className="text-lg font-semibold">Admin Panel</p>
@@ -54,9 +55,9 @@ export default function Layout() {
           </div>
         </aside>
 
-        <div className="flex-1 lg:ml-72">
+        <div className="min-w-0 flex-1 lg:ml-72">
           <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/80 px-4 py-4 backdrop-blur-xl lg:px-8">
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3">
               <button className="rounded-xl border border-white/10 p-2 lg:hidden" onClick={() => setOpen(true)}>
                 <Menu size={20} />
               </button>
@@ -67,7 +68,7 @@ export default function Layout() {
             </div>
           </header>
 
-          <motion.main initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-4 lg:p-8">
+          <motion.main initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="min-w-0 max-w-full overflow-hidden p-3 sm:p-4 lg:p-8">
             <Outlet />
           </motion.main>
         </div>

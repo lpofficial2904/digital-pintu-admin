@@ -10,6 +10,9 @@ import AllServices from './services/AllServices';
 import AddService from './services/AddService';
 import EditService from './services/EditService';
 import ContactButtons from './pages/ContactButtons';
+import AllBlogs from './blogs/AllBlogs';
+import AddBlog from './blogs/AddBlog';
+import EditBlog from './blogs/EditBlog';
 import { useAuth } from './context/AuthContext';
 
 function ProtectedRoute({ children }) {
@@ -33,6 +36,9 @@ export default function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/user-tracker" element={<UserTracker />} />
         <Route path="/contact-buttons" element={<ContactButtons />} />
+        <Route path="/blogs" element={<AllBlogs />} />
+        <Route path="/blogs/add" element={<AddBlog />} />
+        <Route path="/blogs/edit/:id" element={<EditBlog />} />
       </Route>
     </Routes>
   );
