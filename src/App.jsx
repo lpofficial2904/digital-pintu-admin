@@ -13,6 +13,8 @@ import ContactButtons from './pages/ContactButtons';
 import AllBlogs from './blogs/AllBlogs';
 import AddBlog from './blogs/AddBlog';
 import EditBlog from './blogs/EditBlog';
+import WebsitePages from './pages/WebsitePages';
+import Hiring from './pages/Hiring';
 import { useAuth } from './context/AuthContext';
 
 function ProtectedRoute({ children }) {
@@ -39,6 +41,8 @@ export default function App() {
         <Route path="/blogs" element={<AllBlogs />} />
         <Route path="/blogs/add" element={<AddBlog />} />
         <Route path="/blogs/edit/:id" element={<EditBlog />} />
+        <Route path="/website-pages" element={<WebsitePages />} />
+        <Route path="/hiring" element={<Hiring />} />
       </Route>
     </Routes>
   );

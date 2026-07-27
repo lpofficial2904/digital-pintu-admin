@@ -212,3 +212,53 @@ export const updateSiteSettings = (payload) =>
     method: "PUT",
     body: JSON.stringify(payload),
   });
+
+export const getWebsitePages = () => request("/website-pages/admin");
+
+export const createWebsitePage = (payload) =>
+  request("/website-pages/admin", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+export const updateWebsitePage = (id, payload) =>
+  request(`/website-pages/admin/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+
+export const deleteWebsitePage = (id) =>
+  request(`/website-pages/admin/${id}`, { method: "DELETE" });
+
+export const getCareerApplications = () => request("/career-applications/admin");
+
+export const updateCareerApplication = (id, payload) =>
+  request(`/career-applications/admin/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+
+export const deleteCareerApplication = (id) =>
+  request(`/career-applications/admin/${id}`, { method: "DELETE" });
+
+export const downloadCareerAttachment = async (applicationId, fieldName, fileName) => {
+  const response = await fetch(`${API_URL}/career-applications/admin/${applicationId}/attachments/${encodeURIComponent(fieldName)}`, {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.message || "Unable to download attachment");
+  }
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName || "attachment";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+};
+
+export const getCareerAttachmentViewUrl = (applicationId, fieldName) =>
+  `${API_URL}/career-applications/admin/${applicationId}/attachments/${encodeURIComponent(fieldName)}?view=1`;
