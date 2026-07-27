@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { Bot, Mail, MessageCircle, Phone, Save } from "lucide-react";
+import { Bot, Mail, MapPin, MessageCircle, Phone, Save } from "lucide-react";
 import Loader from "../components/admin/Loader";
 import { getSiteSettings, updateSiteSettings } from "../services/api";
 
@@ -8,6 +8,7 @@ export default function ContactButtons() {
   const [form, setForm] = useState({
     phoneNumber: "",
     contactEmail: "",
+    address: "",
     whatsappNumber: "",
     whatsappMessage: "",
     chatbotGreeting: "",
@@ -35,6 +36,7 @@ export default function ContactButtons() {
       <h3 className="flex items-center gap-2 text-lg font-semibold text-white"><Phone size={18} className="text-cyan-300" /> Contact information</h3>
       <label className="block text-sm text-slate-300">Phone number for call button<div className="mt-2 flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950 px-4"><Phone size={17} className="text-cyan-300" /><input value={form.phoneNumber} onChange={(e) => setForm((current) => ({ ...current, phoneNumber: e.target.value }))} placeholder="+91 98765 43210" className="w-full bg-transparent py-3 outline-none" /></div></label>
       <label className="block text-sm text-slate-300">Contact email<div className="mt-2 flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950 px-4"><Mail size={17} className="text-cyan-300" /><input type="email" value={form.contactEmail} onChange={(e) => setForm((current) => ({ ...current, contactEmail: e.target.value }))} placeholder="hello@example.com" className="w-full bg-transparent py-3 outline-none" /></div></label>
+      <label className="block text-sm text-slate-300">Business address<div className="mt-2 flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950 px-4"><MapPin size={17} className="text-cyan-300" /><input value={form.address} onChange={(e) => setForm((current) => ({ ...current, address: e.target.value }))} placeholder="City, State, Country" className="w-full bg-transparent py-3 outline-none" /></div></label>
       <label className="block text-sm text-slate-300">WhatsApp number (with country code)<div className="mt-2 flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950 px-4"><MessageCircle size={17} className="text-emerald-400" /><input value={form.whatsappNumber} onChange={(e) => setForm((current) => ({ ...current, whatsappNumber: e.target.value }))} placeholder="919876543210" className="w-full bg-transparent py-3 outline-none" /></div></label>
       <label className="block text-sm text-slate-300">Prefilled WhatsApp message<textarea rows="4" value={form.whatsappMessage} onChange={(e) => setForm((current) => ({ ...current, whatsappMessage: e.target.value }))} placeholder="Hello, I would like to know more about your services." className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 outline-none" /></label>
       <div className="border-t border-white/10 pt-5">
