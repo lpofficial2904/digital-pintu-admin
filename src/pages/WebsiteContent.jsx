@@ -8,7 +8,7 @@ const defaults = {
   hero: {
     badge: "Digital Pintu IT Solutions • Est. 2014", titleAccent: "Architecting", titleMain: "The Next-Gen", titleGradient: "Digital Future.",
     description: "Transforming ideas into powerful digital experiences with innovative websites, mobile apps, UI/UX design, SEO, and result-driven marketing solutions that fuel business success.",
-    primaryButtonLabel: "Start Your Project", primaryButtonUrl: "/#contact", secondaryButtonLabel: "Explore Services", secondaryButtonUrl: "/services",
+    primaryButtonLabel: "Start Your Project", primaryButtonUrl: "/contact/", secondaryButtonLabel: "Explore Services", secondaryButtonUrl: "/services",
     stats: [{ value: "500+", label: "Projects" }, { value: "99.9%", label: "Uptime" }, { value: "150+", label: "Clients" }],
   },
   stats: [
@@ -81,6 +81,22 @@ export default function WebsiteContent() {
     finally { setSaving(false); }
   };
 
+  const selectLogo = (file) => {
+    if (!file) return;
+    const allowedTypes = ["image/png", "image/jpeg", "image/webp", "image/svg+xml"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Logo must be a PNG, JPG, WEBP, or SVG image");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Logo must be smaller than 2 MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setAllSettings((current) => ({ ...current, logoData: reader.result }));
+    reader.readAsDataURL(file);
+  };
+
   if (!allSettings) return <Loader />;
   return <div className="max-w-5xl space-y-6">
     <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5">
@@ -89,6 +105,21 @@ export default function WebsiteContent() {
       <p className="mt-2 text-sm text-slate-400">Manage the Hero, business statistics, Why Choose Us and About page from one screen.</p>
     </div>
     <form onSubmit={save} className="space-y-6">
+      <Section title="Website logo">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+          <div className="flex h-24 w-48 items-center justify-center rounded-2xl border border-white/10 bg-slate-950 p-4">
+            {allSettings.logoData ? <img src={allSettings.logoData} alt="Website logo preview" className="max-h-full max-w-full object-contain" /> : <span className="text-sm text-slate-500">Default logo active</span>}
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <label className="cursor-pointer rounded-xl bg-cyan-400 px-4 py-2.5 text-sm font-semibold text-slate-950">
+              Upload logo
+              <input type="file" accept=".png,.jpg,.jpeg,.webp,.svg" className="sr-only" onChange={(event) => selectLogo(event.target.files?.[0])} />
+            </label>
+            {allSettings.logoData && <button type="button" onClick={() => setAllSettings((current) => ({ ...current, logoData: "" }))} className="rounded-xl border border-white/10 px-4 py-2.5 text-sm text-slate-300">Use default logo</button>}
+          </div>
+        </div>
+        <p className="text-xs text-slate-500">PNG, JPG, WEBP or SVG · Maximum 2 MB. This logo is used in the Navbar and Footer.</p>
+      </Section>
       <Section title="Hero section">
         <Grid>
           {["badge", "titleAccent", "titleMain", "titleGradient", "primaryButtonLabel", "primaryButtonUrl", "secondaryButtonLabel", "secondaryButtonUrl"].map((key) =>
