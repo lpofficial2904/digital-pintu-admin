@@ -14,6 +14,7 @@ import AllBlogs from './blogs/AllBlogs';
 import AddBlog from './blogs/AddBlog';
 import EditBlog from './blogs/EditBlog';
 import WebsitePages from './pages/WebsitePages';
+import WebsiteContent from './pages/WebsiteContent';
 import Hiring from './pages/Hiring';
 import { useAuth } from './context/AuthContext';
 
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/blogs/add" element={<AddBlog />} />
         <Route path="/blogs/edit/:id" element={<EditBlog />} />
         <Route path="/website-pages" element={<WebsitePages />} />
+        <Route path="/website-content" element={<WebsiteContent />} />
         <Route path="/hiring" element={<Hiring />} />
       </Route>
     </Routes>

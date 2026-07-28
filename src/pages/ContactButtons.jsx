@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { Bot, Mail, MapPin, MessageCircle, Phone, Save } from "lucide-react";
+import { Bot, Link2, Mail, MapPin, MessageCircle, Phone, Save } from "lucide-react";
 import Loader from "../components/admin/Loader";
 import { getSiteSettings, updateSiteSettings } from "../services/api";
 
@@ -11,6 +11,11 @@ export default function ContactButtons() {
     address: "",
     whatsappNumber: "",
     whatsappMessage: "",
+    facebookUrl: "",
+    instagramUrl: "",
+    twitterUrl: "",
+    linkedinUrl: "",
+    githubUrl: "",
     chatbotGreeting: "",
     chatbotServicesMessage: "",
     chatbotPricingMessage: "",
@@ -39,6 +44,20 @@ export default function ContactButtons() {
       <label className="block text-sm text-slate-300">Business address<div className="mt-2 flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950 px-4"><MapPin size={17} className="text-cyan-300" /><input value={form.address} onChange={(e) => setForm((current) => ({ ...current, address: e.target.value }))} placeholder="City, State, Country" className="w-full bg-transparent py-3 outline-none" /></div></label>
       <label className="block text-sm text-slate-300">WhatsApp number (with country code)<div className="mt-2 flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950 px-4"><MessageCircle size={17} className="text-emerald-400" /><input value={form.whatsappNumber} onChange={(e) => setForm((current) => ({ ...current, whatsappNumber: e.target.value }))} placeholder="919876543210" className="w-full bg-transparent py-3 outline-none" /></div></label>
       <label className="block text-sm text-slate-300">Prefilled WhatsApp message<textarea rows="4" value={form.whatsappMessage} onChange={(e) => setForm((current) => ({ ...current, whatsappMessage: e.target.value }))} placeholder="Hello, I would like to know more about your services." className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 outline-none" /></label>
+      <div className="border-t border-white/10 pt-5">
+        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white"><Link2 size={18} className="text-cyan-300" /> Social media links</h3>
+        <div className="space-y-4">
+          {[
+            ["facebookUrl", "Facebook URL", "https://facebook.com/your-page"],
+            ["instagramUrl", "Instagram URL", "https://instagram.com/your-profile"],
+            ["twitterUrl", "X / Twitter URL", "https://x.com/your-profile"],
+            ["linkedinUrl", "LinkedIn URL", "https://linkedin.com/company/your-company"],
+            ["githubUrl", "GitHub URL", "https://github.com/your-profile"],
+          ].map(([field, label, placeholder]) => (
+            <label key={field} className="block text-sm text-slate-300">{label}<div className="mt-2 flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950 px-4"><Link2 size={16} className="shrink-0 text-cyan-300" /><input type="url" value={form[field]} onChange={(e) => setForm((current) => ({ ...current, [field]: e.target.value }))} placeholder={placeholder} className="w-full bg-transparent py-3 outline-none" /></div></label>
+          ))}
+        </div>
+      </div>
       <div className="border-t border-white/10 pt-5">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white"><Bot size={18} className="text-cyan-300" /> Chatbot messages</h3>
         <div className="space-y-4">

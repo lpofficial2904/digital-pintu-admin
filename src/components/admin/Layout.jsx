@@ -1,12 +1,14 @@
 import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { Bell, Menu, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { getCareerApplications } from '../../services/api';
 
 const links = [
   { to: '/blogs', label: 'Blogs', icon: 'B' },
   { to: '/website-pages', label: 'Website Pages', icon: 'P' },
+  { to: '/website-content', label: 'Website Content', icon: 'C' },
   { to: '/hiring', label: 'Hiring', icon: 'H' },
   { to: '/dashboard', label: 'Dashboard', icon: '◉' },
   { to: '/services', label: 'Services', icon: '▣' },
@@ -19,7 +21,17 @@ const links = [
 
 export default function Layout() {
   const [open, setOpen] = useState(false);
+  const [unreadApplications, setUnreadApplications] = useState(0);
   const { user, logout } = useAuth();
+
+  useEffect(() => {
+    const loadUnread = () => getCareerApplications()
+      .then((data) => setUnreadApplications(data.stats?.unreadApplications || 0))
+      .catch(() => {});
+    loadUnread();
+    const interval = window.setInterval(loadUnread, 15000);
+    return () => window.clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -59,7 +71,7 @@ export default function Layout() {
 
         <div className="min-w-0 flex-1 lg:ml-72">
           <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/80 px-4 py-4 backdrop-blur-xl lg:px-8">
-            <div className="flex items-center gap-3">
+            <div className="flex w-full items-center gap-3">
               <button className="rounded-xl border border-white/10 p-2 lg:hidden" onClick={() => setOpen(true)}>
                 <Menu size={20} />
               </button>
@@ -67,6 +79,10 @@ export default function Layout() {
                 <h1 className="text-lg font-semibold sm:text-xl">Control Center</h1>
                 <p className="hidden text-sm text-slate-400 sm:block">Modern dashboard for your business</p>
               </div>
+              <Link to="/hiring" aria-label={`${unreadApplications} unread hiring applications`} className="relative ml-auto rounded-xl border border-white/10 p-2.5 text-slate-300 transition hover:border-cyan-400/40 hover:text-cyan-300">
+                <Bell size={20} />
+                {unreadApplications > 0 && <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-cyan-400 px-1.5 py-0.5 text-center text-[10px] font-bold text-slate-950">{unreadApplications > 99 ? "99+" : unreadApplications}</span>}
+              </Link>
             </div>
           </header>
 

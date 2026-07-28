@@ -6,12 +6,21 @@ import {
   downloadCareerAttachment,
   getCareerAttachmentViewUrl,
   getCareerApplications,
+  getSiteSettings,
   updateCareerApplication,
+  updateSiteSettings,
 } from "../services/api";
 
 const statuses = ["New", "Reviewing", "Shortlisted", "Interview", "Rejected", "Hired"];
 const inputClass = "rounded-xl border border-white/10 bg-slate-950 px-3 py-2.5 text-sm outline-none focus:border-cyan-400";
 const formatDate = (value) => new Date(value).toLocaleString();
+const defaultEmailTemplates = {
+  adminSubject: "New job application: {{jobTitle}} — {{candidateName}}",
+  adminBody: "A new application has been received for {{jobTitle}}.\n\n{{applicationDetails}}\n\nSubmitted: {{submittedAt}}",
+  candidateSubject: "Application received — {{jobTitle}}",
+  candidateBody: "Hi {{candidateName}},\n\nThank you for applying for {{jobTitle}} at Digital Pintu Solutions. We have received your application and our hiring team will review it shortly.\n\nRegards,\nDigital Pintu Solutions",
+};
+const normalizeEmailTemplates = (value) => ({ ...defaultEmailTemplates, ...(value || {}) });
 
 export default function Hiring() {
   const [applications, setApplications] = useState([]);
@@ -24,6 +33,9 @@ export default function Hiring() {
   const [dateTo, setDateTo] = useState("");
   const [sort, setSort] = useState("date-desc");
   const [selected, setSelected] = useState(null);
+  const [siteSettings, setSiteSettings] = useState(null);
+  const [templates, setTemplates] = useState(defaultEmailTemplates);
+  const [savingTemplates, setSavingTemplates] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState(
     "Notification" in window ? Notification.permission : "unsupported"
   );
@@ -54,9 +66,26 @@ export default function Hiring() {
 
   useEffect(() => {
     load();
+    getSiteSettings().then(({ settings }) => {
+      setSiteSettings(settings);
+      setTemplates(normalizeEmailTemplates(settings.careerEmailTemplates));
+    }).catch((error) => toast.error(error.message));
     const interval = window.setInterval(() => load({ notify: true }), 15000);
     return () => window.clearInterval(interval);
   }, []);
+
+  const saveTemplates = async (event) => {
+    event.preventDefault();
+    if (!siteSettings) return;
+    setSavingTemplates(true);
+    try {
+      const data = await updateSiteSettings({ ...siteSettings, careerEmailTemplates: templates });
+      setSiteSettings(data.settings);
+      setTemplates(normalizeEmailTemplates(data.settings?.careerEmailTemplates));
+      toast.success("Career email templates saved");
+    } catch (error) { toast.error(error.message); }
+    finally { setSavingTemplates(false); }
+  };
 
   const enableNotifications = async () => {
     if (!("Notification" in window)) {
@@ -148,6 +177,23 @@ export default function Hiring() {
         <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-5"><p className="text-sm text-slate-400">Total open hiring</p><p className="mt-2 text-4xl font-bold text-cyan-300">{stats.totalOpenings || 0}</p></div>
         <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-5"><p className="text-sm text-slate-400">Total applications</p><p className="mt-2 text-4xl font-bold text-violet-300">{stats.totalApplications || 0}</p></div>
       </section>
+
+      <form onSubmit={saveTemplates} className="rounded-3xl border border-white/10 bg-slate-900/70 p-5">
+        <div className="mb-5"><p className="text-xs uppercase tracking-[.25em] text-cyan-300">Email templates</p><h3 className="mt-1 text-lg font-semibold">Application emails</h3><p className="mt-1 text-xs text-slate-400">Available variables: {"{{candidateName}}"}, {"{{candidateEmail}}"}, {"{{jobTitle}}"}, {"{{submittedAt}}"}, {"{{applicationDetails}}"}. Future form fields are automatically included in application details.</p></div>
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="space-y-3">
+            <h4 className="font-medium text-cyan-300">Admin notification</h4>
+            <input className={`${inputClass} w-full`} value={templates.adminSubject} onChange={(event) => setTemplates((current) => ({ ...current, adminSubject: event.target.value }))} placeholder="Admin email subject" />
+            <textarea rows="7" className={`${inputClass} w-full`} value={templates.adminBody} onChange={(event) => setTemplates((current) => ({ ...current, adminBody: event.target.value }))} placeholder="Admin email body" />
+          </div>
+          <div className="space-y-3">
+            <h4 className="font-medium text-violet-300">Candidate confirmation</h4>
+            <input className={`${inputClass} w-full`} value={templates.candidateSubject} onChange={(event) => setTemplates((current) => ({ ...current, candidateSubject: event.target.value }))} placeholder="Candidate email subject" />
+            <textarea rows="7" className={`${inputClass} w-full`} value={templates.candidateBody} onChange={(event) => setTemplates((current) => ({ ...current, candidateBody: event.target.value }))} placeholder="Candidate email body" />
+          </div>
+        </div>
+        <button disabled={savingTemplates || !siteSettings} className="mt-4 rounded-xl bg-cyan-400 px-4 py-2.5 font-semibold text-slate-950 disabled:opacity-60">{savingTemplates ? "Saving..." : "Save email templates"}</button>
+      </form>
 
       <section className="grid gap-3 rounded-3xl border border-white/10 bg-slate-900/70 p-4 sm:grid-cols-2 xl:grid-cols-4">
         <label className="flex items-center gap-2 rounded-xl border border-white/10 bg-slate-950 px-3"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search name, email, role" className="min-w-0 flex-1 bg-transparent py-2.5 text-sm outline-none" /></label>
