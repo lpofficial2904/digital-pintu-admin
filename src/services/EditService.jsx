@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loader from '../components/admin/Loader';
 import { getServices, updateService } from '../services/api';

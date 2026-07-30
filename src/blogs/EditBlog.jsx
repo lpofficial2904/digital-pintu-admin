@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/admin/Loader";
 import { getBlogs, updateBlog } from "../services/api";

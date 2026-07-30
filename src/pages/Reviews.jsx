@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { CheckCircle2, Pencil, Plus, Search, Star, Trash2, XCircle } from 'lucide-react';
 import Table from '../components/admin/Table'; import Loader from '../components/admin/Loader'; import Pagination from '../components/admin/Pagination'; import DeleteModal from '../components/admin/DeleteModal'; import ManagementModal from '../components/admin/ManagementModal';
 import { bulkDeleteReviews, bulkReviewStatus, createAdminReview, deleteReview, getReviews, updateReview, updateReviewStatus } from '../services/api';

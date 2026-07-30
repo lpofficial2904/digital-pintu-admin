@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bell, Eye, Search, Trash2, X } from "lucide-react";
-import toast from "react-hot-toast";
+import { Bell, Eye, Pencil, Search, Trash2, X } from "lucide-react";
+import { toast } from "sonner";
 import {
   deleteCareerApplication,
   downloadCareerAttachment,
@@ -33,6 +33,8 @@ export default function Hiring() {
   const [dateTo, setDateTo] = useState("");
   const [sort, setSort] = useState("date-desc");
   const [selected, setSelected] = useState(null);
+  const [editing, setEditing] = useState(null);
+  const [savingApplication, setSavingApplication] = useState(false);
   const [siteSettings, setSiteSettings] = useState(null);
   const [templates, setTemplates] = useState(defaultEmailTemplates);
   const [savingTemplates, setSavingTemplates] = useState(false);
@@ -162,6 +164,34 @@ export default function Hiring() {
     } catch (error) { toast.error(error.message); }
   };
 
+  const saveApplication = async (event) => {
+    event.preventDefault();
+    const form = Object.fromEntries(new FormData(event.currentTarget));
+    const answers = { ...(editing.answers || {}) };
+    Object.keys(answers).forEach((key) => {
+      const formKey = `answer:${key}`;
+      if (formKey in form) answers[key] = form[formKey];
+    });
+    setSavingApplication(true);
+    try {
+      await updateCareerApplication(editing._id, {
+        applicantName: form.applicantName,
+        email: form.email,
+        phone: form.phone,
+        jobTitle: form.jobTitle,
+        status: form.status,
+        answers,
+      });
+      toast.success("Application details updated");
+      setEditing(null);
+      await load();
+    } catch (error) {
+      toast.error(error.message || "Unable to update application");
+    } finally {
+      setSavingApplication(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <section className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-slate-900/80 p-5 sm:flex-row sm:items-center sm:justify-between">
@@ -227,7 +257,7 @@ export default function Hiring() {
                 <td className="px-5 py-4">{item.jobTitle}</td>
                 <td className="px-5 py-4 text-slate-400">{formatDate(item.createdAt)}</td>
                 <td className="px-5 py-4"><select value={item.status} onChange={(event) => updateStatus(item, event.target.value)} className={inputClass}>{statuses.map((statusItem) => <option key={statusItem}>{statusItem}</option>)}</select></td>
-                <td className="px-5 py-4"><button onClick={() => view(item)} className="p-2 text-cyan-300"><Eye size={17} /></button><button onClick={() => remove(item)} className="p-2 text-rose-300"><Trash2 size={17} /></button></td>
+                <td className="px-5 py-4"><button onClick={() => view(item)} title="View application" className="p-2 text-cyan-300"><Eye size={17} /></button><button onClick={() => setEditing(item)} title="Edit application" className="p-2 text-amber-300"><Pencil size={17} /></button><button onClick={() => remove(item)} title="Delete application" className="p-2 text-rose-300"><Trash2 size={17} /></button></td>
               </tr>
             ))}
           </tbody>
@@ -262,6 +292,25 @@ export default function Hiring() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {editing && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 p-4 backdrop-blur-sm">
+          <div className="mx-auto mt-8 max-w-2xl rounded-3xl border border-white/10 bg-slate-900 p-6">
+            <div className="flex items-center justify-between"><div><p className="text-xs uppercase tracking-[.25em] text-cyan-300">Hiring</p><h3 className="mt-1 text-2xl font-bold">Edit application</h3></div><button onClick={() => setEditing(null)} className="rounded-xl border border-white/10 p-2"><X size={18} /></button></div>
+            <form onSubmit={saveApplication} className="mt-6 grid gap-4 sm:grid-cols-2">
+              <label className="text-sm text-slate-300">Applicant name<input required name="applicantName" defaultValue={editing.applicantName} className={`${inputClass} mt-1 w-full`} /></label>
+              <label className="text-sm text-slate-300">Email<input required type="email" name="email" defaultValue={editing.email} className={`${inputClass} mt-1 w-full`} /></label>
+              <label className="text-sm text-slate-300">Phone<input name="phone" defaultValue={editing.phone || ""} className={`${inputClass} mt-1 w-full`} /></label>
+              <label className="text-sm text-slate-300">Opening<input required name="jobTitle" defaultValue={editing.jobTitle} className={`${inputClass} mt-1 w-full`} /></label>
+              <label className="text-sm text-slate-300">Status<select name="status" defaultValue={editing.status} className={`${inputClass} mt-1 w-full`}>{statuses.map((item) => <option key={item}>{item}</option>)}</select></label>
+              {Object.entries(editing.answers || {}).map(([key, value]) => (
+                <label key={key} className="text-sm text-slate-300">{key}<textarea name={`answer:${key}`} defaultValue={String(value ?? "")} rows="2" className={`${inputClass} mt-1 w-full`} /></label>
+              ))}
+              <div className="flex gap-3 sm:col-span-2"><button disabled={savingApplication} className="rounded-xl bg-cyan-400 px-4 py-3 font-semibold text-slate-950 disabled:opacity-60">{savingApplication ? "Saving..." : "Save changes"}</button><button type="button" onClick={() => setEditing(null)} className="rounded-xl border border-white/10 px-4 py-3">Cancel</button></div>
+            </form>
           </div>
         </div>
       )}

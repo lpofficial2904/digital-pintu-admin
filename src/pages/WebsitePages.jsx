@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Pencil, Plus, Trash2, X } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import {
   createWebsitePage,
   deleteWebsitePage,

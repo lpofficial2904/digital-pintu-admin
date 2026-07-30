@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { Search, Trash2, ShieldCheck, ShieldOff, Pencil } from 'lucide-react';
 import ManagementModal from '../components/admin/ManagementModal';
 import Table from '../components/admin/Table';
@@ -101,7 +101,7 @@ export default function Users() {
       )}
 
       <DeleteModal open={Boolean(deleteTarget)} title="user" onCancel={() => setDeleteTarget(null)} onConfirm={handleDelete} />
-      <ManagementModal open={Boolean(editing)} title="Edit user" onClose={() => setEditing(null)}>{editing && <form onSubmit={saveUser} className="space-y-4"><input name="name" defaultValue={editing.name} className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input name="avatar" defaultValue={editing.avatar || ''} placeholder="Avatar URL" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><div className="grid gap-3 sm:grid-cols-2"><select name="role" defaultValue={editing.role} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['admin','manager','editor','user'].map(role=><option key={role}>{role}</option>)}</select><select name="status" defaultValue={editing.status || (editing.isBlocked ? 'Blocked' : 'Active')} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['Active','Blocked','Suspended'].map(status=><option key={status}>{status}</option>)}</select></div><button className="rounded-xl bg-cyan-400 px-4 py-3 font-semibold text-slate-950">Save user</button></form>}</ManagementModal>
+      <ManagementModal open={Boolean(editing)} title="Edit user" onClose={() => setEditing(null)}>{editing && <form onSubmit={saveUser} className="space-y-4"><input required name="name" defaultValue={editing.name} placeholder="Name" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input required type="email" name="email" defaultValue={editing.email} placeholder="Email" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input name="avatar" defaultValue={editing.avatar || ''} placeholder="Avatar URL" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><div className="grid gap-3 sm:grid-cols-2"><select name="role" defaultValue={editing.role} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['admin','manager','editor','user'].map(role=><option key={role}>{role}</option>)}</select><select name="status" defaultValue={editing.status || (editing.isBlocked ? 'Blocked' : 'Active')} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['Active','Blocked','Suspended'].map(status=><option key={status}>{status}</option>)}</select></div><button className="rounded-xl bg-cyan-400 px-4 py-3 font-semibold text-slate-950">Save user</button></form>}</ManagementModal>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Save } from "lucide-react";
 import Loader from "../components/admin/Loader";
 import { getSiteSettings, updateSiteSettings } from "../services/api";

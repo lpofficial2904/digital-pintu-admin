@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Activity, Trash2, Users } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import DeleteModal from "../components/admin/DeleteModal";
 import Loader from "../components/admin/Loader";
 import StatsCard from "../components/admin/StatsCard";

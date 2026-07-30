@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import DeleteModal from "../components/admin/DeleteModal";

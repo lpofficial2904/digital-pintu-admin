@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 const defaults = { title: "", slug: "", category: "", excerpt: "", content: "", image: "", author: "Digital Pintu", metaTitle: "", metaKeywords: "", metaDescription: "", isActive: true };
 

@@ -6,11 +6,11 @@ import { useAuth } from '../../context/AuthContext';
 import { getCareerApplications } from '../../services/api';
 
 const links = [
+  { to: '/dashboard', label: 'Dashboard', icon: '◉' },
   { to: '/blogs', label: 'Blogs', icon: 'B' },
   { to: '/website-pages', label: 'Website Pages', icon: 'P' },
   { to: '/website-content', label: 'Website Content', icon: 'C' },
   { to: '/hiring', label: 'Hiring', icon: 'H' },
-  { to: '/dashboard', label: 'Dashboard', icon: '◉' },
   { to: '/services', label: 'Services', icon: '▣' },
   { to: '/reviews', label: 'Reviews', icon: '✦' },
   { to: '/contacts', label: 'Contacts', icon: '✉' },
