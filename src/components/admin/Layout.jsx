@@ -25,13 +25,14 @@ export default function Layout() {
   const { user, logout } = useAuth();
 
   useEffect(() => {
+    if (!user) return undefined;
     const loadUnread = () => getCareerApplications()
       .then((data) => setUnreadApplications(data.stats?.unreadApplications || 0))
       .catch(() => {});
     loadUnread();
     const interval = window.setInterval(loadUnread, 15000);
     return () => window.clearInterval(interval);
-  }, []);
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">

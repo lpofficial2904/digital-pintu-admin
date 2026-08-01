@@ -48,10 +48,15 @@
 // export const getVisitorTracker = () => request('/tracker/admin');
 
 
-const API_URL = `${import.meta.env.VITE_API_URL}/api`;
+const API_URL = import.meta.env.DEV ? "/api" : "https://api.digitalpintu.com/api";
 
 const request = async (path, { headers = {}, body, ...options } = {}) => {
   const requestHeaders = new Headers(headers);
+  const adminToken = localStorage.getItem("admin_token");
+
+  if (adminToken && !requestHeaders.has("Authorization")) {
+    requestHeaders.set("Authorization", `Bearer ${adminToken}`);
+  }
 
   if (body !== undefined && !requestHeaders.has("Content-Type")) {
     requestHeaders.set("Content-Type", "application/json");
@@ -66,8 +71,17 @@ const request = async (path, { headers = {}, body, ...options } = {}) => {
 
   const data = await res.json().catch(() => ({}));
 
+  if (res.status === 401 || res.status === 403) {
+    localStorage.removeItem("admin_session");
+    localStorage.removeItem("admin_token");
+    localStorage.removeItem("admin_session_api_origin");
+    window.dispatchEvent(new Event("admin:unauthorized"));
+  }
+
   if (!res.ok) {
-    throw new Error(data.message || "Request failed");
+    const error = new Error(data.message || "Request failed");
+    error.status = res.status;
+    throw error;
   }
 
   return data;
@@ -244,6 +258,7 @@ export const deleteCareerApplication = (id) =>
 export const downloadCareerAttachment = async (applicationId, fieldName, fileName) => {
   const response = await fetch(`${API_URL}/career-applications/admin/${applicationId}/attachments/${encodeURIComponent(fieldName)}`, {
     credentials: "include",
+    headers: localStorage.getItem("admin_token") ? { Authorization: `Bearer ${localStorage.getItem("admin_token")}` } : {},
   });
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
