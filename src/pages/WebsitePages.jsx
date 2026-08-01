@@ -110,10 +110,22 @@ export default function WebsitePages() {
   };
 
   const toggle = async (page, field) => {
+    const nextValue = !page[field];
+    const toastId = toast.loading(
+      field === "isActive" ? "Updating page status..." : "Updating navbar visibility..."
+    );
     try {
-      await updateWebsitePage(page._id, { ...page, [field]: !page[field] });
+      await updateWebsitePage(page._id, { ...page, [field]: nextValue });
       await load();
-    } catch (error) { toast.error(error.message); }
+      toast.success(
+        field === "isActive"
+          ? `Page ${nextValue ? "activated" : "deactivated"}`
+          : `Page ${nextValue ? "shown in" : "hidden from"} navbar`,
+        { id: toastId }
+      );
+    } catch (error) {
+      toast.error(error.message || "Unable to update page", { id: toastId });
+    }
   };
 
   const remove = async (page) => {

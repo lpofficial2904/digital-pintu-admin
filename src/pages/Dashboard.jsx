@@ -4,6 +4,7 @@ import { Briefcase, MessageSquareText, MailOpen, Users, Layers3, Sparkles } from
 import StatsCard from '../components/admin/StatsCard';
 import Loader from '../components/admin/Loader';
 import { getAdminStats } from '../services/api';
+import { toast } from 'sonner';
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
@@ -15,6 +16,8 @@ export default function Dashboard() {
       try {
         const data = await getAdminStats();
         if (mounted) setStats(data);
+      } catch (error) {
+        if (mounted) toast.error(error.message || 'Unable to load dashboard');
       } finally {
         if (mounted) setLoading(false);
       }

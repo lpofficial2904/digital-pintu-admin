@@ -17,19 +17,25 @@ import WebsitePages from './pages/WebsitePages';
 import WebsiteContent from './pages/WebsiteContent';
 import Hiring from './pages/Hiring';
 import { useAuth } from './context/AuthContext';
+import NotFound from './pages/NotFound';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return null;
-  return user ? children : <Navigate to="/login" replace />;
+  return user ? children : <Navigate to="/" replace />;
+}
+
+function AdminEntry() {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  return user ? <Navigate to="/dashboard" replace /> : <Login />;
 }
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<AdminEntry />} />
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/services" element={<AllServices />} />
         <Route path="/services/add" element={<AddService />} />
@@ -46,6 +52,7 @@ export default function App() {
         <Route path="/website-content" element={<WebsiteContent />} />
         <Route path="/hiring" element={<Hiring />} />
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

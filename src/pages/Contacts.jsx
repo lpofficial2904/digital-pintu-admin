@@ -48,12 +48,18 @@ export default function Contacts() {
   );
   const pages = Math.max(1, Math.ceil(data.length / per));
   const update = async (id, payload) => {
+    const toastId = toast.loading(payload.status ? "Updating contact status..." : "Saving contact...");
     try {
       await updateContact(id, payload);
-      toast.success("Contact updated");
-      load();
+      toast.success(
+        payload.status ? `Contact marked as ${payload.status}` : "Contact updated",
+        { id: toastId },
+      );
+      await load();
+      return true;
     } catch (e) {
-      toast.error(e.message);
+      toast.error(e.message || "Unable to update contact", { id: toastId });
+      return false;
     }
   };
   return (
@@ -158,10 +164,15 @@ export default function Contacts() {
         title="contact"
         onCancel={() => setDel(null)}
         onConfirm={async () => {
-          await deleteContact(del._id);
-          setDel(null);
-          load();
-          toast.success("Contact deleted");
+          const toastId = toast.loading("Deleting contact...");
+          try {
+            await deleteContact(del._id);
+            setDel(null);
+            await load();
+            toast.success("Contact deleted", { id: toastId });
+          } catch (error) {
+            toast.error(error.message || "Unable to delete contact", { id: toastId });
+          }
         }}
       />
       <ManagementModal
@@ -173,11 +184,11 @@ export default function Contacts() {
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              await update(
+              const updated = await update(
                 edit._id,
                 Object.fromEntries(new FormData(e.currentTarget)),
               );
-              setEdit(null);
+              if (updated) setEdit(null);
             }}
             className="space-y-3"
           >

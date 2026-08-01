@@ -52,6 +52,7 @@ export default function WebsiteContent() {
   const [allSettings, setAllSettings] = useState(null);
   const [content, setContent] = useState(defaults);
   const [saving, setSaving] = useState(false);
+  const [savingBrand, setSavingBrand] = useState(false);
 
   useEffect(() => {
     getSiteSettings().then(({ settings }) => {
@@ -97,6 +98,40 @@ export default function WebsiteContent() {
     reader.readAsDataURL(file);
   };
 
+  const saveNavbarBrand = async (nextSettings) => {
+    const navbarBrandText = String(nextSettings.navbarBrandText || "").trim();
+    if (!navbarBrandText) {
+      toast.error("Navbar brand text is required");
+      return false;
+    }
+    setSavingBrand(true);
+    try {
+      const data = await updateSiteSettings({
+        ...nextSettings,
+        navbarBrandText,
+        navbarBrandActive: nextSettings.navbarBrandActive !== false,
+        contentSettings: {
+          ...content,
+          navbarBrandText,
+          navbarBrandActive: nextSettings.navbarBrandActive !== false,
+        },
+      });
+      setAllSettings((current) => ({ ...current, ...data.settings }));
+      setContent((current) => ({
+        ...current,
+        navbarBrandText,
+        navbarBrandActive: nextSettings.navbarBrandActive !== false,
+      }));
+      toast.success("Navbar brand updated");
+      return true;
+    } catch (error) {
+      toast.error(error.message);
+      return false;
+    } finally {
+      setSavingBrand(false);
+    }
+  };
+
   if (!allSettings) return <Loader />;
   return <div className="max-w-5xl space-y-6">
     <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5">
@@ -119,6 +154,21 @@ export default function WebsiteContent() {
           </div>
         </div>
         <p className="text-xs text-slate-500">PNG, JPG, WEBP or SVG · Maximum 2 MB. This logo is used in the Navbar and Footer.</p>
+      </Section>
+      <Section title="Navbar brand text">
+        <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
+          <label className="block text-sm text-slate-300">Text between logo and navigation
+            <input maxLength="80" className={`mt-2 ${inputClass}`} value={allSettings.navbarBrandText ?? "Digital Pintu Solutions"} onChange={(event) => setAllSettings((current) => ({ ...current, navbarBrandText: event.target.value }))} onBlur={() => saveNavbarBrand(allSettings)} />
+          </label>
+          <button disabled={savingBrand} type="button" role="switch" aria-checked={allSettings.navbarBrandActive !== false} onMouseDown={(event) => event.preventDefault()} onClick={() => {
+            const next = { ...allSettings, navbarBrandActive: allSettings.navbarBrandActive === false };
+            setAllSettings(next);
+            saveNavbarBrand(next);
+          }} className={`min-w-28 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:opacity-60 ${allSettings.navbarBrandActive !== false ? "bg-emerald-500/15 text-emerald-300" : "bg-rose-500/15 text-rose-300"}`}>
+            {allSettings.navbarBrandActive !== false ? "Active" : "Inactive"}
+          </button>
+        </div>
+        <p className="text-xs text-slate-500">Text is saved when you leave the field. Status is saved immediately; the website refreshes automatically.</p>
       </Section>
       <Section title="Hero section">
         <Grid>
