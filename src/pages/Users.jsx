@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { Search, Trash2, ShieldCheck, ShieldOff, Pencil } from 'lucide-react';
+import { Search, Trash2, ShieldOff, Pencil, Plus } from 'lucide-react';
 import ManagementModal from '../components/admin/ManagementModal';
 import Table from '../components/admin/Table';
 import Loader from '../components/admin/Loader';
 import Pagination from '../components/admin/Pagination';
 import DeleteModal from '../components/admin/DeleteModal';
-import { deleteUser, getAdminUsers, toggleUserStatus, updateAdminUser } from '../services/api';
+import { createAdminUser, deleteUser, getAdminUsers, toggleUserStatus, updateAdminUser } from '../services/api';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -15,6 +15,7 @@ export default function Users() {
   const [page, setPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [editing, setEditing] = useState(null);
+  const [creating, setCreating] = useState(false);
   const [roleFilter, setRoleFilter] = useState('all');
   const perPage = 6;
 
@@ -36,6 +37,7 @@ export default function Users() {
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
 
   const saveUser = async (event) => { event.preventDefault(); try { await updateAdminUser(editing._id, Object.fromEntries(new FormData(event.currentTarget))); toast.success('User updated'); setEditing(null); loadUsers(); } catch (error) { toast.error(error.message || 'Update failed'); } };
+  const createAdmin = async (event) => { event.preventDefault(); try { await createAdminUser(Object.fromEntries(new FormData(event.currentTarget))); toast.success('New admin created'); setCreating(false); loadUsers(); } catch (error) { toast.error(error.message || 'Unable to create admin'); } };
 
   const handleStatusToggle = async (user) => {
     try {
@@ -70,6 +72,7 @@ export default function Users() {
             <Search size={16} className="text-slate-400" />
             <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search users" className="min-w-0 flex-1 bg-transparent outline-none" />
           </div>
+          <button onClick={() => setCreating(true)} className="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-400 px-4 py-2.5 text-sm font-semibold text-slate-950"><Plus size={17} />New admin</button>
           <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-sm"><option value="all">All roles</option>{['admin','manager','editor','user'].map((role) => <option key={role} value={role}>{role}</option>)}</select>
         </div>
       </div>
@@ -101,7 +104,8 @@ export default function Users() {
       )}
 
       <DeleteModal open={Boolean(deleteTarget)} title="user" onCancel={() => setDeleteTarget(null)} onConfirm={handleDelete} />
-      <ManagementModal open={Boolean(editing)} title="Edit user" onClose={() => setEditing(null)}>{editing && <form onSubmit={saveUser} className="space-y-4"><input required name="name" defaultValue={editing.name} placeholder="Name" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input required type="email" name="email" defaultValue={editing.email} placeholder="Email" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input name="avatar" defaultValue={editing.avatar || ''} placeholder="Avatar URL" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><div className="grid gap-3 sm:grid-cols-2"><select name="role" defaultValue={editing.role} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['admin','manager','editor','user'].map(role=><option key={role}>{role}</option>)}</select><select name="status" defaultValue={editing.status || (editing.isBlocked ? 'Blocked' : 'Active')} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['Active','Blocked','Suspended'].map(status=><option key={status}>{status}</option>)}</select></div><button className="rounded-xl bg-cyan-400 px-4 py-3 font-semibold text-slate-950">Save user</button></form>}</ManagementModal>
+      <ManagementModal open={creating} title="Create new admin" onClose={() => setCreating(false)}><form onSubmit={createAdmin} className="space-y-4"><input required name="name" placeholder="Admin name" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input required type="email" name="email" placeholder="Admin login email" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input required minLength="6" type="password" name="password" placeholder="Password (minimum 6 characters)" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><button className="w-full rounded-xl bg-cyan-400 px-4 py-3 font-semibold text-slate-950">Create admin</button></form></ManagementModal>
+      <ManagementModal open={Boolean(editing)} title="Edit user / admin" onClose={() => setEditing(null)}>{editing && <form onSubmit={saveUser} className="space-y-4"><input required name="name" defaultValue={editing.name} placeholder="Name" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input required type="email" name="email" defaultValue={editing.email} placeholder="Login email" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input minLength="6" type="password" name="password" placeholder="New password (leave blank to keep current)" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><input name="avatar" defaultValue={editing.avatar || ''} placeholder="Avatar URL" className="w-full rounded-xl border border-white/10 bg-slate-950 p-3" /><div className="grid gap-3 sm:grid-cols-2"><select name="role" defaultValue={editing.role} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['admin','manager','editor','user'].map(role=><option key={role}>{role}</option>)}</select><select name="status" defaultValue={editing.status || (editing.isBlocked ? 'Blocked' : 'Active')} className="rounded-xl border border-white/10 bg-slate-950 p-3">{['Active','Blocked','Suspended'].map(status=><option key={status}>{status}</option>)}</select></div><button className="rounded-xl bg-cyan-400 px-4 py-3 font-semibold text-slate-950">Save changes</button></form>}</ManagementModal>
     </div>
   );
 }

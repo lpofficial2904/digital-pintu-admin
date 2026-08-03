@@ -18,6 +18,7 @@ import WebsiteContent from './pages/WebsiteContent';
 import Hiring from './pages/Hiring';
 import { useAuth } from './context/AuthContext';
 import NotFound from './pages/NotFound';
+import SmtpSettings from './pages/SmtpSettings';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -45,6 +46,7 @@ export default function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/user-tracker" element={<UserTracker />} />
         <Route path="/contact-buttons" element={<ContactButtons />} />
+        <Route path="/smtp-settings" element={<SmtpSettings />} />
         <Route path="/blogs" element={<AllBlogs />} />
         <Route path="/blogs/add" element={<AddBlog />} />
         <Route path="/blogs/edit/:id" element={<EditBlog />} />

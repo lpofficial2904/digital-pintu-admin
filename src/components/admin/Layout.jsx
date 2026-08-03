@@ -17,6 +17,7 @@ const links = [
   { to: '/users', label: 'Users', icon: '👤' },
   { to: '/user-tracker', label: 'User Tracker', icon: '◉' },
   { to: '/contact-buttons', label: 'Contact Buttons', icon: '☎' },
+  { to: '/smtp-settings', label: 'SMTP Settings', icon: '@' },
 ];
 
 export default function Layout() {

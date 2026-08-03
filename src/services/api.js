@@ -97,6 +97,8 @@ export const getAdminStats = () =>
 export const getAdminUsers = () =>
   request("/admin/users");
 
+export const createAdminUser = (payload) => request("/admin/users", { method: "POST", body: JSON.stringify(payload) });
+
 export const updateUserRole = (id, role) =>
   request(`/admin/users/${id}/role`, {
     method: "PUT",
@@ -226,6 +228,9 @@ export const updateSiteSettings = (payload) =>
     method: "PUT",
     body: JSON.stringify(payload),
   });
+
+export const updateSmtpSettings = (payload) => request("/site-settings/admin/smtp", { method: "PUT", body: JSON.stringify(payload) });
+export const testSmtpSettings = (payload) => request("/site-settings/admin/smtp/test", { method: "POST", body: JSON.stringify(payload) });
 
 export const getWebsitePages = () => request("/website-pages/admin");
 

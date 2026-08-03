@@ -1,7 +1,11 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  const apiTarget = (env.VITE_API_URL || 'http://localhost:5000').replace(/\/api\/?$/, '');
+
+  return ({
   // The app route is /admin, but this project is deployed at the root of the
   // admin subdomain, so generated JS/CSS must be served from /assets.
   base: '/',
@@ -11,7 +15,7 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '/api': {
-        target: 'https://api.digitalpintu.com',
+        target: apiTarget,
         changeOrigin: true,
         secure: true,
       },
@@ -21,4 +25,5 @@ export default defineConfig({
     port: 4174,
     host: '0.0.0.0',
   },
+  });
 });
