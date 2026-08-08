@@ -17,6 +17,8 @@ const emptyPage = {
   content: "",
   metaTitle: "",
   metaDescription: "",
+  focusKeyword: "",
+  secondaryKeywords: [],
   showInNavbar: true,
   isActive: true,
   displayOrder: 20,
@@ -192,11 +194,14 @@ export default function WebsitePages() {
               <label className="space-y-1 text-sm sm:col-span-2">Page content<textarea rows="6" className={fieldClass} value={editing.content || ""} onChange={(e) => updateField("content", e.target.value)} /></label>
               <label className="space-y-1 text-sm">Meta title<input className={fieldClass} value={editing.metaTitle || ""} onChange={(e) => updateField("metaTitle", e.target.value)} /></label>
               <label className="space-y-1 text-sm">Meta description<input className={fieldClass} value={editing.metaDescription || ""} onChange={(e) => updateField("metaDescription", e.target.value)} /></label>
+              <label className="space-y-1 text-sm">Focus keyword<input className={fieldClass} value={editing.focusKeyword || ""} onChange={(e) => updateField("focusKeyword", e.target.value)} /></label>
+              <label className="space-y-1 text-sm">Secondary keywords<input className={fieldClass} value={(editing.secondaryKeywords || []).join(", ")} onChange={(e) => updateField("secondaryKeywords", e.target.value.split(",").map((v)=>v.trim()).filter(Boolean))} /></label>
             </div>
 
             <div className="mt-5 flex flex-wrap gap-5 text-sm">
               <label className="flex items-center gap-2"><input type="checkbox" checked={editing.showInNavbar} onChange={(e) => updateField("showInNavbar", e.target.checked)} /> Show in Navbar</label>
               <label className="flex items-center gap-2"><input type="checkbox" checked={editing.isActive} onChange={(e) => updateField("isActive", e.target.checked)} /> Active</label>
+              <label className="flex items-center gap-2"><input type="checkbox" checked={Boolean(editing.noIndex)} onChange={(e) => updateField("noIndex", e.target.checked)} /> Noindex</label>
             </div>
 
             {editing.pageType === "careers" && (

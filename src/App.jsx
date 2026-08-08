@@ -19,6 +19,9 @@ import Hiring from './pages/Hiring';
 import { useAuth } from './context/AuthContext';
 import NotFound from './pages/NotFound';
 import SmtpSettings from './pages/SmtpSettings';
+import SeoSettings from './pages/SeoSettings';
+import Offers from './pages/Offers';
+import ThemeSettings from './pages/ThemeSettings';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -47,6 +50,9 @@ export default function App() {
         <Route path="/user-tracker" element={<UserTracker />} />
         <Route path="/contact-buttons" element={<ContactButtons />} />
         <Route path="/smtp-settings" element={<SmtpSettings />} />
+        <Route path="/seo-settings" element={<SeoSettings />} />
+        <Route path="/offers" element={<Offers />} />
+        <Route path="/theme-settings" element={<ThemeSettings />} />
         <Route path="/blogs" element={<AllBlogs />} />
         <Route path="/blogs/add" element={<AddBlog />} />
         <Route path="/blogs/edit/:id" element={<EditBlog />} />

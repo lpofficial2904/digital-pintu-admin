@@ -142,6 +142,8 @@ export const deleteContact = (id) =>
 export const getServices = () =>
   request("/admin/services");
 
+export const getService = (id) => request(`/admin/services/${id}`);
+
 export const createService = (payload) =>
   request("/admin/services", {
     method: "POST",
@@ -155,8 +157,8 @@ export const updateService = (id, payload) =>
   });
 
 export const updateServiceStatus = (id, isActive) =>
-  request(`/admin/services/${id}`, {
-    method: "PUT",
+  request(`/admin/services/${id}/status`, {
+    method: "PATCH",
     body: JSON.stringify({ isActive }),
   });
 
@@ -166,6 +168,7 @@ export const deleteService = (id) =>
   });
 
 export const getBlogs = () => request("/admin/blogs");
+export const getBlog = (id) => request(`/admin/blogs/${id}`);
 export const createBlog = (payload) => request("/admin/blogs", { method: "POST", body: JSON.stringify(payload) });
 export const updateBlog = (id, payload) => request(`/admin/blogs/${id}`, { method: "PUT", body: JSON.stringify(payload) });
 export const updateBlogStatus = (id, isActive) => request(`/admin/blogs/${id}/status`, { method: "PATCH", body: JSON.stringify({ isActive }) });
@@ -229,6 +232,11 @@ export const updateSiteSettings = (payload) =>
     body: JSON.stringify(payload),
   });
 
+export const getOffers = () => request("/offers/admin");
+export const createOffer = (payload) => request("/offers/admin", { method: "POST", body: JSON.stringify(payload) });
+export const updateOffer = (id, payload) => request(`/offers/admin/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+export const deleteOffer = (id) => request(`/offers/admin/${id}`, { method: "DELETE" });
+
 export const updateSmtpSettings = (payload) => request("/site-settings/admin/smtp", { method: "PUT", body: JSON.stringify(payload) });
 export const testSmtpSettings = (payload) => request("/site-settings/admin/smtp/test", { method: "POST", body: JSON.stringify(payload) });
 
@@ -250,6 +258,7 @@ export const deleteWebsitePage = (id) =>
   request(`/website-pages/admin/${id}`, { method: "DELETE" });
 
 export const getCareerApplications = () => request("/career-applications/admin");
+export const getCareerApplicationStats = () => request("/career-applications/admin-stats");
 
 export const updateCareerApplication = (id, payload) =>
   request(`/career-applications/admin/${id}`, {

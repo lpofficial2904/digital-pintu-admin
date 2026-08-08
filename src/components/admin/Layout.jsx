@@ -3,13 +3,16 @@ import { Bell, Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { getCareerApplications } from '../../services/api';
+import { getCareerApplicationStats, getSiteSettings } from '../../services/api';
+import adminLogo from '../../assets/digital-pintu-logo-new.png';
 
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: '◉' },
   { to: '/blogs', label: 'Blogs', icon: 'B' },
   { to: '/website-pages', label: 'Website Pages', icon: 'P' },
   { to: '/website-content', label: 'Website Content', icon: 'C' },
+  { to: '/offers', label: 'Offers', icon: '%' },
+  { to: '/theme-settings', label: 'Theme', icon: 'T' },
   { to: '/hiring', label: 'Hiring', icon: 'H' },
   { to: '/services', label: 'Services', icon: '▣' },
   { to: '/reviews', label: 'Reviews', icon: '✦' },
@@ -18,6 +21,7 @@ const links = [
   { to: '/user-tracker', label: 'User Tracker', icon: '◉' },
   { to: '/contact-buttons', label: 'Contact Buttons', icon: '☎' },
   { to: '/smtp-settings', label: 'SMTP Settings', icon: '@' },
+  { to: '/seo-settings', label: 'SEO Settings', icon: 'S' },
 ];
 
 export default function Layout() {
@@ -27,12 +31,24 @@ export default function Layout() {
 
   useEffect(() => {
     if (!user) return undefined;
-    const loadUnread = () => getCareerApplications()
-      .then((data) => setUnreadApplications(data.stats?.unreadApplications || 0))
+    const loadUnread = () => getCareerApplicationStats()
+      .then((data) => setUnreadApplications(data.unreadApplications || 0))
       .catch(() => {});
     loadUnread();
     const interval = window.setInterval(loadUnread, 15000);
     return () => window.clearInterval(interval);
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return undefined;
+    let active = true;
+    getSiteSettings().then(({ settings }) => {
+      if (!active) return;
+      let icon = document.querySelector('link[rel="icon"]');
+      if (!icon) { icon = document.createElement('link'); icon.rel = 'icon'; document.head.appendChild(icon); }
+      icon.href = settings.logoData || adminLogo;
+    }).catch(() => {});
+    return () => { active = false; };
   }, [user]);
 
   return (

@@ -7,7 +7,7 @@ import { getSiteSettings, updateSiteSettings } from "../services/api";
 const defaults = {
   hero: {
     badge: "Digital Pintu IT Solutions • Est. 2014", titleAccent: "Architecting", titleMain: "The Next-Gen", titleGradient: "Digital Future.",
-    description: "Transforming ideas into powerful digital experiences with innovative websites, mobile apps, UI/UX design, SEO, and result-driven marketing solutions that fuel business success.",
+    description: "Digital Pintu is an IT company in Mansarovar, Jaipur helping businesses grow with website development, mobile apps, UI/UX, SEO, Google Ads and digital marketing solutions.",
     primaryButtonLabel: "Start Your Project", primaryButtonUrl: "/contact/", secondaryButtonLabel: "Explore Services", secondaryButtonUrl: "/services",
     stats: [{ value: "500+", label: "Projects" }, { value: "99.9%", label: "Uptime" }, { value: "150+", label: "Clients" }],
   },
@@ -29,7 +29,7 @@ const defaults = {
   },
   about: {
     eyebrow: "Who we are", heading: "Empowering Businesses with", accentHeading: "Modern Technology",
-    description: "Digital Pintu is an IT solutions company helping businesses build powerful digital products.",
+    description: "Digital Pintu is an IT and web development company in Mansarovar, Jaipur creating scalable websites, mobile apps and digital growth solutions.",
     cards: [
       { title: "Why We Exist", description: "We turn complex ideas into reliable digital products.", note: "Technology built around real business goals." },
       { title: "Our Mission", description: "We deliver digital experiences that help brands grow.", note: "Focused on performance and results." },
@@ -37,6 +37,17 @@ const defaults = {
       { title: "Our Work Culture", description: "We combine communication, creativity and engineering discipline.", note: "Transparent collaboration." },
     ],
   },
+  process: { eyebrow:"How We Work", heading:"From Idea to", accentHeading:"Launch", interval:2200, isActive:true, steps:[{number:"01",title:"Discovery",description:"Understand goals and users."},{number:"02",title:"UI/UX Strategy",description:"Create and review prototypes."},{number:"03",title:"Build & Code",description:"Develop in agile sprints."},{number:"04",title:"Launch & Scale",description:"Launch, monitor and improve."}] },
+  technologies: { isActive:true, speed:38, items:["MongoDB","Express.js","React.js","Next.js","Node.js","AWS","Figma","Google Analytics"] },
+  contact: { eyebrow:"Contact Us", heading:"Let's Build Something Great", description:"Tell us about your requirements and our team will get back to you.", workingHours:"Mon - Sat | 9 AM - 8 PM", submitLabel:"Send Message", servicePlaceholder:"Choose Service", serviceOptions:["Web Development","App Development","UI / UX Design","SEO Optimization","Digital Marketing","E-Commerce"] },
+  footer: { description:"We build fast, responsive and scalable digital solutions that help businesses grow.", quickLinksTitle:"Quick Links", servicesTitle:"Our Services", contactTitle:"Contact Us", copyrightText:"Digital Pintu. All Rights Reserved." },
+  servicesSection: { eyebrow:"Our Services", heading:"We Build", accentHeading:"Digital Experiences", description:"From websites to mobile applications, branding, marketing and SEO — we create high-performance digital products that help businesses grow.", activeLabel:"Active", learnMoreLabel:"Learn More" },
+  reviewsSection: { eyebrow:"Client Proof", heading:"Words from", accentHeading:"Happy Clients" },
+  blogsPage: { eyebrow:"Our Blog", heading:"Insights for your", accentHeading:"digital growth", description:"Explore practical ideas, technology updates, and business insights from Digital Pintu.", readLabel:"Read article", emptyMessage:"No blogs are available yet." },
+  serviceDetails: { featuresHeading:"Our Service Features & Process", featuresDescription:"We drive dynamic software operations using an engineered structure from conceptual designs to complete code architecture.", technologiesHeading:"Our Technologies", technologiesDescription:"We utilize a range of industry-leading cloud and engineering technologies tailored to deliver outstanding apps." },
+  aboutCta: { eyebrow:"What we bring together", heading:"Strategy, design and technology—under one roof.", description:"From websites and mobile apps to SEO, automation and digital marketing, our team builds connected solutions for sustainable growth.", buttonLabel:"Explore Services", buttonUrl:"/services" },
+  notFound: { eyebrow:"Error 404", heading:"Page not found", description:"The page you are looking for does not exist, may have moved, or the URL is incorrect.", backLabel:"Go back", homeLabel:"Home page" },
+  sections: { tech:true, services:true, stats:true, whyChooseUs:true, process:true, reviews:true, contact:true },
 };
 
 const inputClass = "w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2.5 text-sm outline-none focus:border-cyan-400";
@@ -45,6 +56,10 @@ const mergeContent = (value = {}) => ({
   hero: { ...defaults.hero, ...(value.hero || {}), stats: value.hero?.stats?.length ? value.hero.stats : defaults.hero.stats },
   whyChooseUs: { ...defaults.whyChooseUs, ...(value.whyChooseUs || {}), features: value.whyChooseUs?.features?.length ? value.whyChooseUs.features : defaults.whyChooseUs.features },
   about: { ...defaults.about, ...(value.about || {}), cards: value.about?.cards?.length ? value.about.cards : defaults.about.cards },
+  process: { ...defaults.process, ...(value.process || {}), steps: value.process?.steps?.length ? value.process.steps : defaults.process.steps },
+  technologies: { ...defaults.technologies, ...(value.technologies || {}), items: value.technologies?.items?.length ? value.technologies.items : defaults.technologies.items },
+  contact: { ...defaults.contact, ...(value.contact || {}) }, footer: { ...defaults.footer, ...(value.footer || {}) }, sections: { ...defaults.sections, ...(value.sections || {}) },
+  servicesSection: { ...defaults.servicesSection, ...(value.servicesSection || {}) }, reviewsSection: { ...defaults.reviewsSection, ...(value.reviewsSection || {}) }, blogsPage: { ...defaults.blogsPage, ...(value.blogsPage || {}) }, serviceDetails: { ...defaults.serviceDetails, ...(value.serviceDetails || {}) }, aboutCta: { ...defaults.aboutCta, ...(value.aboutCta || {}) }, notFound: { ...defaults.notFound, ...(value.notFound || {}) },
   stats: value.stats?.length ? value.stats : defaults.stats,
 });
 
@@ -154,6 +169,11 @@ export default function WebsiteContent() {
           </div>
         </div>
         <p className="text-xs text-slate-500">PNG, JPG, WEBP or SVG · Maximum 2 MB. This logo is used in the Navbar and Footer.</p>
+        <div className="grid max-w-xl gap-4 sm:grid-cols-2">
+          <label className="text-sm text-slate-300">Logo width (px)<input type="number" min="24" max="500" className={`mt-2 ${inputClass}`} value={allSettings.logoWidth ?? 112} onChange={(event) => setAllSettings((current) => ({ ...current, logoWidth: Number(event.target.value) }))} /></label>
+          <label className="text-sm text-slate-300">Logo height (px)<input type="number" min="24" max="300" className={`mt-2 ${inputClass}`} value={allSettings.logoHeight ?? 72} onChange={(event) => setAllSettings((current) => ({ ...current, logoHeight: Number(event.target.value) }))} /></label>
+        </div>
+        <p className="text-xs text-cyan-300">Uploaded logo automatically website favicon bhi banega.</p>
       </Section>
       <Section title="Navbar brand text">
         <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
@@ -196,6 +216,24 @@ export default function WebsiteContent() {
         </Grid>
         <EditorList title="About cards" items={content.about.cards} fields={["title", "description", "note"]} update={(i, key, value) => listField("about", "cards", i, key, value)} />
       </Section>
+      <Section title="Section visibility">
+        <div className="grid gap-3 sm:grid-cols-3">{Object.keys(content.sections).map((key)=><label key={key} className="flex items-center gap-3 rounded-xl border border-white/10 bg-slate-950/60 p-3 capitalize"><input type="checkbox" checked={content.sections[key]} onChange={(e)=>field("sections",key,e.target.checked)}/>{key}</label>)}</div>
+      </Section>
+      <Section title="Work process">
+        <Grid>{["eyebrow","heading","accentHeading","interval"].map(key=><Field key={key} label={key} value={content.process[key]} onChange={value=>field("process",key,key==="interval"?Number(value):value)}/>)}</Grid>
+        <EditorList title="Process steps" items={content.process.steps} fields={["number","title","description"]} update={(i,key,value)=>listField("process","steps",i,key,value)}/>
+      </Section>
+      <Section title="Technology marquee">
+        <Grid><Field label="Animation duration (seconds)" value={content.technologies.speed} onChange={v=>field("technologies","speed",Number(v))}/><Field label="Technologies (comma separated)" textarea value={content.technologies.items.join(", ")} onChange={v=>field("technologies","items",v.split(",").map(x=>x.trim()).filter(Boolean))}/></Grid>
+      </Section>
+      <Section title="Contact content"><Grid>{["eyebrow","heading","description","workingHours","submitLabel","servicePlaceholder"].map(key=><Field key={key} label={key} textarea={key==="description"} value={content.contact[key]} onChange={v=>field("contact",key,v)}/>) }<Field label="Service options (comma separated)" textarea value={(content.contact.serviceOptions||[]).join(", ")} onChange={v=>field("contact","serviceOptions",v.split(",").map(x=>x.trim()).filter(Boolean))}/></Grid></Section>
+      <Section title="Footer content"><Grid>{["description","quickLinksTitle","servicesTitle","contactTitle","copyrightText"].map(key=><Field key={key} label={key} textarea={key==="description"} value={content.footer[key]} onChange={v=>field("footer",key,v)}/>)}</Grid></Section>
+      <Section title="Services section"><Grid>{["eyebrow","heading","accentHeading","description","activeLabel","learnMoreLabel"].map(key=><Field key={key} label={key} textarea={key==="description"} value={content.servicesSection[key]} onChange={v=>field("servicesSection",key,v)}/>)}</Grid></Section>
+      <Section title="Reviews section"><Grid>{["eyebrow","heading","accentHeading"].map(key=><Field key={key} label={key} value={content.reviewsSection[key]} onChange={v=>field("reviewsSection",key,v)}/>)}</Grid></Section>
+      <Section title="Blogs listing page"><Grid>{["eyebrow","heading","accentHeading","description","readLabel","emptyMessage"].map(key=><Field key={key} label={key} textarea={["description","emptyMessage"].includes(key)} value={content.blogsPage[key]} onChange={v=>field("blogsPage",key,v)}/>)}</Grid></Section>
+      <Section title="Service detail common content"><Grid>{["featuresHeading","featuresDescription","technologiesHeading","technologiesDescription"].map(key=><Field key={key} label={key} textarea={key.includes("Description")} value={content.serviceDetails[key]} onChange={v=>field("serviceDetails",key,v)}/>)}</Grid></Section>
+      <Section title="About page CTA"><Grid>{["eyebrow","heading","description","buttonLabel","buttonUrl"].map(key=><Field key={key} label={key} textarea={key==="description"} value={content.aboutCta[key]} onChange={v=>field("aboutCta",key,v)}/>)}</Grid></Section>
+      <Section title="404 page"><Grid>{["eyebrow","heading","description","backLabel","homeLabel"].map(key=><Field key={key} label={key} textarea={key==="description"} value={content.notFound[key]} onChange={v=>field("notFound",key,v)}/>)}</Grid></Section>
       <button disabled={saving} className="sticky bottom-5 inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-5 py-3 font-semibold text-slate-950 shadow-xl disabled:opacity-60"><Save size={17} />{saving ? "Saving..." : "Save all content"}</button>
     </form>
   </div>;

@@ -162,7 +162,7 @@ export default function AllServices() {
                       <button disabled={orderDisabled || serviceIndex === services.length - 1} onClick={() => reorderService(service._id, "down")} title="Move down" aria-label={`Move ${service.title} down`} className="rounded-lg border border-white/10 p-1.5 text-slate-300 disabled:cursor-not-allowed disabled:opacity-30"><ArrowDown size={14} /></button>
                     </div>
                   </td>
-                  <td className="px-4 py-3">{service.image ? <img src={service.image} alt="" className="h-10 w-12 rounded-lg object-cover" /> : <span className="text-slate-500">—</span>}</td>
+                  <td className="px-4 py-3">{service.imageThumbnail ? <img src={service.imageThumbnail} alt="" className="h-10 w-12 rounded-lg object-cover" /> : <span className="text-slate-500">—</span>}</td>
                   <td className="px-4 py-3 text-cyan-300">{service.icon || "—"}</td>
                   <td className="px-4 py-3 font-medium text-white">{service.title}</td>
                   <td className="px-4 py-3 text-slate-400">{service.category || "General"}</td>

@@ -15,8 +15,13 @@ export default function AddService() {
       metaTitle: '',
       metaKeywords: '',
       metaDescription: '',
+      focusKeyword: '', secondaryKeywords: '', ogTitle: '', ogDescription: '', noIndex: false,
       icon: '',
       image: '',
+      imageThumbnail: '',
+      imageAlt: '',
+      canonicalUrl: '',
+      ogImage: '',
       highlights: [{ title: '', desc: '' }],
       technologies: [{ name: '', icon: '' }],
       isActive: true,
@@ -41,7 +46,10 @@ export default function AddService() {
     }
 
     const reader = new FileReader();
-    reader.onloadend = () => setValue('image', reader.result);
+    reader.onloadend = () => {
+      const source = String(reader.result); setValue('image', source);
+      const preview = new Image(); preview.onload = () => { const canvas=document.createElement('canvas'); canvas.width=480; canvas.height=270; const context=canvas.getContext('2d'); const scale=Math.max(canvas.width/preview.width,canvas.height/preview.height); const width=preview.width*scale; const height=preview.height*scale; context.drawImage(preview,(canvas.width-width)/2,(canvas.height-height)/2,width,height); setValue('imageThumbnail',canvas.toDataURL('image/jpeg',.72)); }; preview.src=source;
+    };
     reader.readAsDataURL(file);
   };
 
@@ -95,11 +103,14 @@ export default function AddService() {
 
         <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
           <h3 className="mb-4 font-semibold text-white">SEO Settings</h3>
+          <div className="mb-4 grid gap-4 md:grid-cols-2"><div><label className="mb-2 block text-sm text-slate-300">Image Alt Text</label><input {...register('imageAlt')} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div><div><label className="mb-2 block text-sm text-slate-300">Canonical URL</label><input {...register('canonicalUrl')} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div><div><label className="mb-2 block text-sm text-slate-300">Open Graph Title</label><input {...register('ogTitle')} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div><div><label className="mb-2 block text-sm text-slate-300">Open Graph Image URL</label><input {...register('ogImage')} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div><div className="md:col-span-2"><label className="mb-2 block text-sm text-slate-300">Open Graph Description</label><textarea {...register('ogDescription')} rows="2" className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div></div>
           <div className="grid gap-4 md:grid-cols-2">
+            <div><label className="mb-2 block text-sm text-slate-300">Focus Keyword</label><input {...register('focusKeyword')} className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div><div><label className="mb-2 block text-sm text-slate-300">Secondary Keywords</label><input {...register('secondaryKeywords')} placeholder="comma separated" className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
             <div><label className="mb-2 block text-sm text-slate-300">Meta Title</label><input {...register('metaTitle')} maxLength="70" className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
             <div><label className="mb-2 block text-sm text-slate-300">Meta Keywords</label><input {...register('metaKeywords')} placeholder="web development, app development" className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
           </div>
           <div className="mt-4"><label className="mb-2 block text-sm text-slate-300">Meta Description</label><textarea {...register('metaDescription')} maxLength="180" rows="3" className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3" /></div>
+          <label className="mt-4 flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" {...register('noIndex')} /> Noindex this service</label>
         </div>
 
         <div>
